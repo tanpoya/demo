@@ -3,7 +3,6 @@ package com.example.demo;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller // 컨트롤러 어노테이션 명시
 public class Demo0ontroller {
