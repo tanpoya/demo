@@ -195,12 +195,7 @@ https://templatemo.com/tm-578-first-portfolio
                     <!-- 로그인 후 : 사용자 아이디 + 로그아웃 (CSRF 때문에 POST 폼으로 전송) -->
                     <th:block sec:authorize="isAuthenticated()">
                         <i class="navbar-icon bi-person-circle me-2 text-center"></i>
-                        <span class="navbar-user me-3"><strong sec:authentication="name">user</strong>님
-                            <!-- [6주차] 내 권한 배지 : hasRole('권한') 이 true 인 것만 표시 -->
-                            <span sec:authorize="hasRole('ADMIN')" class="role-badge role-ADMIN">ADMIN</span>
-                            <span sec:authorize="hasRole('MANAGER')" class="role-badge role-MANAGER">MANAGER</span>
-                            <span sec:authorize="hasRole('USER')" class="role-badge role-USER">USER</span>
-                        </span>
+                        <span class="navbar-user me-3"><strong sec:authentication="name">user</strong>님</span>
                         <form th:action="@{/logout}" method="post" class="m-0">
                             <button type="submit" class="custom-btn btn">
                                 <i class="bi-box-arrow-right me-1"></i>로그아웃
