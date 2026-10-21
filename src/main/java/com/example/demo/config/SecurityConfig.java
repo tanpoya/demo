@@ -29,6 +29,7 @@ public class SecurityConfig {
                                                 .requestMatchers("/css/**", "/js/**", "/images/**", "/fonts/**")
                                                 .permitAll()
                                                 .requestMatchers("/admin/**").hasRole("ADMIN") // [6주차] 관리자만
+                                                .requestMatchers("/api/hello").permitAll()
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form // 2. 폼 로그인 설정 (인증)
                                                 .loginPage("/login")
