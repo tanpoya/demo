@@ -24,6 +24,8 @@
     <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet">
 
     <link th:href="@{/css/bootstrap-icons.css}" rel="stylesheet">
+    <!-- [3주차 연습문제] 추가 : 로컬 아이콘 CSS 에 없는 bi-anthropic 등 최신 아이콘을 위해 CDN 연결 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
 
     <link th:href="@{/css/magnific-popup.css}" rel="stylesheet" media="print" onload="this.media='all'">
     <noscript>
@@ -166,7 +168,11 @@ https://templatemo.com/tm-578-first-portfolio
                     </li>
 
                     <!-- [5주차] 회원 전용 페이지 : 로그인하지 않으면 로그인 화면으로 이동 -->
-                    <li class="nav-item">
+                    <!-- [6주차 연습문제] 변경 : 회원목록 메뉴는 ADMIN, MANAGER 에게만 보이기 (USER 숨김) -->
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" th:href="@{/testdb}">회원목록</a>
+                    </li> -->
+                    <li class="nav-item" sec:authorize="hasAnyRole('ADMIN', 'MANAGER')">
                         <a class="nav-link" th:href="@{/testdb}">회원목록</a>
                     </li>
 
@@ -439,7 +445,10 @@ https://templatemo.com/tm-578-first-portfolio
                                     <p>You can explore more CSS templates on TemplateMo website by browsing through
                                         different tags.</p>
 
-                                    <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
+                                    <!-- [3주차 연습문제] 변경 : 빈 링크(#) → AI 상세 페이지 -->
+                                    <!-- <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a> -->
+                                    <a href="/detailed_ai.html" target="_blank" rel="noopener noreferrer"
+                                        class="custom-btn custom-border-btn btn mt-3">Discover More</a>
 
                                     <div class="services-icon-wrap d-flex justify-content-center align-items-center">
                                         <i class="services-icon bi-anthropic"></i>
@@ -461,10 +470,15 @@ https://templatemo.com/tm-578-first-portfolio
                                     <p>If you need a customized ecommerce website for your business, feel free to
                                         discuss with me.</p>
 
-                                    <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
+                                    <!-- [3주차 연습문제] 변경 : 빈 링크(#) → 보안 상세 페이지 -->
+                                    <!-- <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a> -->
+                                    <a href="/detailed_security.html" target="_blank" rel="noopener noreferrer"
+                                        class="custom-btn custom-border-btn btn mt-3">Discover More</a>
 
                                     <div class="services-icon-wrap d-flex justify-content-center align-items-center">
-                                        <i class="services-icon bi-phone"></i>
+                                        <!-- [3주차 연습문제] 변경 : 아이콘 bi-phone → bi-shield-lock (보안) -->
+                                        <!-- <i class="services-icon bi-phone"></i> -->
+                                        <i class="services-icon bi-shield-lock"></i>
                                     </div>
                                 </div>
                             </div>
@@ -483,10 +497,15 @@ https://templatemo.com/tm-578-first-portfolio
                                     <p>To list your website first on any search engine, we will work together. First
                                         Portfolio is one-page CSS Template for free download.</p>
 
-                                    <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a>
+                                    <!-- [3주차 연습문제] 변경 : 빈 링크(#) → 게임 상세 페이지 -->
+                                    <!-- <a href="#" class="custom-btn custom-border-btn btn mt-3">Discover More</a> -->
+                                    <a href="/detailed_game.html" target="_blank" rel="noopener noreferrer"
+                                        class="custom-btn custom-border-btn btn mt-3">Discover More</a>
 
                                     <div class="services-icon-wrap d-flex justify-content-center align-items-center">
-                                        <i class="services-icon bi-google"></i>
+                                        <!-- [3주차 연습문제] 변경 : 아이콘 bi-google → bi-controller (게임) -->
+                                        <!-- <i class="services-icon bi-google"></i> -->
+                                        <i class="services-icon bi-controller"></i>
                                     </div>
                                 </div>
                             </div>

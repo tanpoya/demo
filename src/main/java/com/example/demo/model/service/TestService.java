@@ -1,5 +1,7 @@
 package com.example.demo.model.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.example.demo.model.domain.TestDB;
@@ -12,5 +14,10 @@ public class TestService {
 
     public TestDB findByName(String name) { // 이름 찾기
         return (TestDB) testRepository.findByName(name);
+    }
+
+    // [4주차 연습문제] 다수 사용자 출력 : 전체 조회 (SELECT * FROM testdb)
+    public List<TestDB> findAll() {
+        return testRepository.findAll();
     }
 }

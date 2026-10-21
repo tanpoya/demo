@@ -38,6 +38,12 @@ public class SecurityConfig {
                                                 .hasRole("ADMIN")
 
                                                 .requestMatchers("/api/hello").permitAll()
+                                                // [3주차 연습문제] 기술 상세 페이지 (AI, 보안, 게임) : 누구나
+                                                .requestMatchers("/detailed_ai.html", "/detailed_security.html",
+                                                                "/detailed_game.html")
+                                                .permitAll()
+                                                // [6주차 연습문제] /testdb(회원목록) 는 ADMIN, MANAGER 만 (USER 403)
+                                                .requestMatchers("/testdb").hasAnyRole("ADMIN", "MANAGER")
                                                 .anyRequest().authenticated())
                                 .formLogin(form -> form // 2. 폼 로그인 설정 (인증)
                                                 .loginPage("/login")
@@ -49,6 +55,10 @@ public class SecurityConfig {
                                                 .logoutSuccessUrl("/login?logout") // 로그아웃 후 이동
                                                 .invalidateHttpSession(true) // 세션 삭제
                                                 .deleteCookies("JSESSIONID", "remember-me")) // 쿠키 삭제
+                                // 4. [5주차 연습문제] 로그인 상태 유지 (login.html 체크박스 name="remember-me")
+                                .rememberMe(remember -> remember
+                                                .key("javaweb-remember-me-key") // 쿠키 서명용 비밀키
+                                                .tokenValiditySeconds(60 * 60 * 24 * 7)) // 7일 유지
                                 // 5. [7주차] REST API 설정
                                 .httpBasic(Customizer.withDefaults()) // Postman : 요청마다 아이디·비밀번호 (Basic 인증)
                                 .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**")) // JSON API 는 CSRF 토큰 검사 제외

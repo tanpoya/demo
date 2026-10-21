@@ -12,4 +12,10 @@ public class TestDB {
     private Long id;
     @Column(nullable = true) // 테이블의 컬럼 설정 값을 명시
     private String name;
+
+    // [4주차 연습문제] 나이, 성별 컬럼 추가 (ddl-auto=update 로 기존 테이블에 컬럼이 자동 추가됨)
+    @Column(nullable = true)
+    private Integer age;
+    @Column(nullable = true, length = 10)
+    private String gender;
 }

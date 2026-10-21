@@ -11,6 +11,7 @@ import com.example.demo.model.dto.MemberForm;
 import com.example.demo.model.repository.MemberRepository;
 
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.*; // User, UserDetails 등
 
 import java.util.Optional;
@@ -30,6 +31,10 @@ public class MemberService implements UserDetailsService {
 
         if (isBlank(form.getUsername()) || isBlank(form.getPassword()) || isBlank(form.getName())) {
             throw new IllegalArgumentException("아이디, 비밀번호, 이름은 필수입니다.");
+        }
+        // [5주차 연습문제] 비밀번호 확인 검증 : 다르면 예외 → DB 에 저장되지 않음
+        if (!form.getPassword().equals(form.getPasswordConfirm())) {
+            throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
         }
         if (memberRepository.existsByUsername(form.getUsername())) {
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
@@ -66,7 +71,17 @@ public class MemberService implements UserDetailsService {
     }
 
     // 관리자가 부여할 수 있는 권한 (화면에서 넘어온 값을 그대로 믿지 않는다)
-    private static final List<String> ROLES = List.of("USER", "ADMIN");
+    // [6주차 연습문제] 변경 : MANAGER 권한 추가
+    // private static final List<String> ROLES = List.of("USER", "ADMIN");
+    private static final List<String> ROLES = List.of("USER", "MANAGER", "ADMIN");
+
+    // [6주차 연습문제] 관리자 본인 보호 : 대상이 현재 로그인한 본인이면 거부 (관리자 0명 방지)
+    private void checkNotSelf(Member member) {
+        String loginUsername = SecurityContextHolder.getContext().getAuthentication().getName();
+        if (member.getUsername().equals(loginUsername)) {
+            throw new IllegalArgumentException("자기 자신의 권한 변경·삭제는 할 수 없습니다.");
+        }
+    }
 
     @PreAuthorize("hasRole('ADMIN')") // 관리자만 실행 가능 (2차 잠금)
     public Member changeRole(Long id, String role) { // 권한 변경
@@ -75,6 +90,7 @@ public class MemberService implements UserDetailsService {
         }
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        checkNotSelf(member); // [6주차 연습문제] 본인 권한 변경 금지
         member.setRole(role);
         memberRepository.save(member); // UPDATE (id 가 있으면 수정)
 
@@ -85,11 +101,20 @@ public class MemberService implements UserDetailsService {
     public void deleteMember(Long id) { // 회원 삭제
         Member member = memberRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
+        checkNotSelf(member); // [6주차 연습문제] 본인 삭제 금지
         memberRepository.delete(member); // DELETE
     }
 
     public Optional<Member> findById(Long id) {
         return memberRepository.findById(id);
+    }
+
+    // [7주차 연습문제] 회원 검색 : 아이디 또는 이름에 검색어가 포함된 회원 (없으면 전체)
+    public List<Member> search(String keyword) {
+        if (isBlank(keyword)) {
+            return findAll();
+        }
+        return memberRepository.findByUsernameContainingOrNameContainingOrderByIdAsc(keyword, keyword);
     }
 
 }
