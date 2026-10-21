@@ -13,6 +13,8 @@ import com.example.demo.model.repository.MemberRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.*; // User, UserDetails 등
 
+import java.util.Optional;
+
 @Service // 서비스 등록
 public class MemberService implements UserDetailsService {
     @Autowired
@@ -20,7 +22,15 @@ public class MemberService implements UserDetailsService {
     @Autowired // SecurityConfig 에 등록한 BCryptPasswordEncoder 주입
     private PasswordEncoder passwordEncoder;
 
+    private boolean isBlank(String value) {
+        return value == null || value.isBlank();
+    } // 클래스 아래쪽
+
     public Member signup(MemberForm form) { // 회원가입
+
+        if (isBlank(form.getUsername()) || isBlank(form.getPassword()) || isBlank(form.getName())) {
+            throw new IllegalArgumentException("아이디, 비밀번호, 이름은 필수입니다.");
+        }
         if (memberRepository.existsByUsername(form.getUsername())) {
             throw new IllegalArgumentException("이미 사용 중인 아이디입니다.");
         }
@@ -59,7 +69,7 @@ public class MemberService implements UserDetailsService {
     private static final List<String> ROLES = List.of("USER", "ADMIN");
 
     @PreAuthorize("hasRole('ADMIN')") // 관리자만 실행 가능 (2차 잠금)
-    public void changeRole(Long id, String role) { // 권한 변경
+    public Member changeRole(Long id, String role) { // 권한 변경
         if (!ROLES.contains(role)) { // 허용된 권한만
             throw new IllegalArgumentException("허용되지 않는 권한입니다 : " + role);
         }
@@ -67,6 +77,8 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
         member.setRole(role);
         memberRepository.save(member); // UPDATE (id 가 있으면 수정)
+
+        return memberRepository.save(member);
     }
 
     @PreAuthorize("hasRole('ADMIN')") // 관리자만 실행 가능 (2차 잠금)
@@ -75,4 +87,9 @@ public class MemberService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException("회원이 존재하지 않습니다."));
         memberRepository.delete(member); // DELETE
     }
+
+    public Optional<Member> findById(Long id) {
+        return memberRepository.findById(id);
+    }
+
 }

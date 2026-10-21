@@ -3,12 +3,15 @@ package com.example.demo.controller;
 import java.time.LocalDateTime;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.example.demo.model.service.MemberService;
 
 import com.example.demo.model.domain.Member;
+import com.example.demo.model.dto.MemberForm;
 import com.example.demo.model.dto.MemberResponse;
 
+import java.net.URI;
 import java.security.Principal;
 
 @RestController // 화면(HTML) 대신 데이터(JSON)를 응답하는 컨트롤러
@@ -31,7 +34,6 @@ public class MemberApiController {
     public MemberResponse me(Principal principal) { // 반환형 Member → MemberResponse
         Member member = memberService.findByUsername(principal.getName());
         return MemberResponse.from(member); // 엔티티 대신 DTO 반환
-
     }
 
 }
